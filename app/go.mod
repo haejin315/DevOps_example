@@ -1,0 +1,3 @@
+module DEVOPS_EXAMPLE
+
+go 1.24.5
