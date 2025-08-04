@@ -1,5 +1,8 @@
-FROM golang:1.24.5-alpine
-
-RUN apk add --no-cache git
+# 빌드 전용 이미지
+FROM golang:1.24.5 AS builder
 
 WORKDIR /app
+COPY . .
+
+# 리눅스에서 실행 가능한 정적 링크된 바이너리로 빌드
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
