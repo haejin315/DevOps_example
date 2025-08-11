@@ -38,8 +38,12 @@ function App() {
     <div style={{ padding: 20 }}>
       <h2>Add Two Numbers</h2>
       <form onSubmit={handleSubmit}>
-        A: <input type="number" value={a} onChange={(e) => setA(e.target.value)} />
-        B: <input type="number" value={b} onChange={(e) => setB(e.target.value)} />
+        <label htmlFor="a">A:</label>
+        <input id="a" type="number" value={a} onChange={(e) => setA(e.target.value)} />
+
+        <label htmlFor="b">B:</label>
+        <input id="b" type="number" value={b} onChange={(e) => setB(e.target.value)} />
+
         <button type="submit">Add</button>
       </form>
 
