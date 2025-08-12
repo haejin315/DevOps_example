@@ -1,40 +1,25 @@
 name: CI
-
 on:
   push:
     branches: [ main, develop, feature/** ]
   pull_request:
+    branches: [ main, develop ]
 
 jobs:
-  go-test:
-    name: Go unit tests
+  # 1) 기능 테스트: go test (race 포함, 커버리지 파일 생성 → 다음 job에서 사용)
+  go-functional-tests:
+    name: 1) Functional tests (go test)
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: app   # ← Go 소스가 있는 폴더
-
+    defaults: { run: { working-directory: app } }
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: '1.24.5'   # 사용 버전에 맞게 조정 (예: 1.21.x, 1.23.x)
+          go-version: '1.24.5'
           cache: true
-
-      - name: Download deps
-        run: go mod download
-
-      - name: Run tests (with race & coverage)
-        run: |
-          go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
-
-      - name: Coverage summary
-        run: |
-          go tool cover -func=coverage.out | tee coverage.txt
-
+      - run: go mod download
+      - name: Run unit/integration tests
+        run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
